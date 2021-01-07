@@ -59,4 +59,26 @@ class MuseumTest < Minitest::Test
     @dmns.admit(@johnny)
     assert_equal [@bob,@sally,@johnny], @dmns.patrons
   end
+
+  def test_patron_by_exhibit_interest
+    @dmns.add_exhibit(@gems_and_minerals)
+    @dmns.add_exhibit(@dead_sea_scrolls)
+    @dmns.add_exhibit(@imax)
+    @bob.add_interest("Gems and Minerals")
+    @bob.add_interest("Dead Sea Scrolls")
+    @sally.add_interest("Dead Sea Scrolls")
+    @johnny.add_interest("Dead Sea Scrolls")
+    @dmns.admit(@bob)
+
+    @dmns.admit(@sally)
+
+    @dmns.admit(@johnny)
+
+    expected = {
+      @gems_and_minerals => [@bob],
+      @dead_sea_scrolls => [@bob,@sally,@johnny],
+      @imax => []
+    }
+    assert_equal expected, @dmns.patrons_by_exhibit_interest
+  end
 end
