@@ -36,4 +36,12 @@ class Museum
     end
      interested
   end
+
+  def ticket_lottery_contestants(exhibit)
+    patrons_by_exhibit_interest.find_all do |exhibit, patrons|
+      patrons.map do |patron|
+         patron.spending_money < exhibit.cost
+      end
+    end.flatten
+  end
 end
