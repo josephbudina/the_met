@@ -9,8 +9,9 @@ class MuseumTest < Minitest::Test
     @gems_and_minerals = Exhibit.new({name: "Gems and Minerals", cost: 0})
     @dead_sea_scrolls = Exhibit.new({name: "Dead Sea Scrolls", cost: 10})
     @imax = Exhibit.new({name: "IMAX",cost: 15})
-    @bob = Patron.new("Bob", 20)
+    @bob = Patron.new("Bob", 0)
     @sally = Patron.new("Sally", 20)
+    @johnny = Patron.new("Johnny", 5)
     @dmns = Museum.new("Denver Museum of Nature and Science")
   end
 
@@ -39,5 +40,23 @@ class MuseumTest < Minitest::Test
 
     assert_equal [@gems_and_minerals, @dead_sea_scrolls], @dmns.recommend_exhibits(@bob)
     assert_equal [@imax], @dmns.recommend_exhibits(@sally)
+  end
+
+  def test_it_can_admit_patrons
+    assert_equal [], @dmns.patrons
+
+    @dmns.add_exhibit(@gems_and_minerals)
+    @dmns.add_exhibit(@dead_sea_scrolls)
+    @dmns.add_exhibit(@imax)
+    @bob.add_interest("Dead Sea Scrolls")
+    @bob.add_interest("Gems and Minerals")
+    @sally.add_interest("IMAX")
+    @johnny.add_interest("Dead Sea Scrolls")
+    @dmns.admit(@bob)
+
+    @dmns.admit(@sally)
+
+    @dmns.admit(@johnny)
+    assert_equal [@bob,@sally,@johnny], @dmns.patrons
   end
 end
